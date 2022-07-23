@@ -135,7 +135,7 @@ function deleteArticle(){
 }
     
 
-//===================================FORMULAIRE=====================================//
+//========================================FORMULAIRE==================================================//
 
 
 //Variables globales
@@ -148,7 +148,7 @@ let email = document.getElementById("email");
 
 //Vrarible globale regExp
 let regExpName = new RegExp(/^[ a-zA-ZàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ'`'\-]+$/);
-let regExpAdress = new RegExp(/^[a-zA-Z0-9\s-',]+$/);
+let regExpAddress = new RegExp(/^[a-zA-Z0-9\s-',]+$/);
 
 //Ecoute le changement et la validation des champs du formulaire
 firstName.addEventListener("change", () => {
@@ -182,7 +182,7 @@ lastName.addEventListener("change", () => {
 address.addEventListener("change", () => {
     let p = document.getElementById("addressErrorMsg")
 
-    if(regExpAdress.test(address.value)){
+    if(regExpAddress.test(address.value)){
         p.textContent = "Adresse validé"
         p.style.color ="green"
         // firstName.style.border = "1px solid #0be45b"
@@ -208,8 +208,8 @@ city.addEventListener("change", () => {
 })
 
 
+let regExpEmail =  new RegExp(/^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/);
 email.addEventListener("change",() =>{
-    let regExpEmail =  new RegExp(/^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/);
     let p = document.getElementById("emailErrorMsg")
 
     if(regExpEmail.test(email.value)){
@@ -224,3 +224,68 @@ email.addEventListener("change",() =>{
 
 
 
+let order = document.getElementById("order");
+// Ecoute du clic sur le bouton "Commander" et création de l'objet contact
+order.addEventListener("click", (e) => {
+  e.preventDefault();
+  let contact = {
+    firstName: firstName.value,
+    lastName: lastName.value,
+    address: address.value,
+    city: city.value,
+    email: email.value,
+  };
+  // Si le panier est vide ou si l'un des champs du formulaire est mal renseigné ou vide => alerte ou le inactivité du bouton
+  if (
+    firstName.value == "" ||
+    lastName.value == "" ||
+    address.value == "" ||
+    city.value == "" ||
+    email.value == ""
+  ) {
+    // order.disabled = false
+    alert("Un des champs du formulaire n'est pas completé ");
+  } else if (localStorage.getItem("productCart") === null || JSON.parse(localStorage.getItem("productCart")).length < 1) {
+    alert(
+      "Votre panier est vide! Merci choisir des produits avant de passer commande."
+    );
+  } else if (
+    regExpName.test(firstName.value) == false ||
+    regExpName.test(lastName.value) == false ||
+    regExpAddress.test(address.value) == false ||
+    regExpName.test(city.value) == false ||
+    regExpEmail.test(email.value) == false
+  ) {
+    alert("Un des champs du formulaire n'est pas valide !");
+  } else {
+        //Tableau qui contiendra les donnée du Ls et véfication grâce à l'id
+        let products = [];
+        itemslocalStorage.forEach((order) => {
+        products.push(order.id);
+        });
+        //Je crée un objet qui aura les données du formulaire et les données du storage
+        let orderConfirm = { contact, products };
+
+        // Appel à l'API et envoie de l'objet en JSON au serveur avec fetch
+        fetch("http://localhost:3000/api/products/order", {
+
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(orderConfirm),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            //j'ajoute l'id de commande dans l'url de la page de confirmation
+            window.location.href = "./confirmation.html?orderId=" + data.orderId;
+            // Suppression des élément du LocalStorage
+            window.localStorage.clear();
+        })
+        .catch((error) => {
+            alert(
+            "Commande invalide, merci de réessayer plus tard"
+            );
+        });
+    }
+});

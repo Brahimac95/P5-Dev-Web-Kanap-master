@@ -31,6 +31,3 @@ function insertionProduct(){
         alert("Le server ne repond pas")
     })
 }
-
-
-
