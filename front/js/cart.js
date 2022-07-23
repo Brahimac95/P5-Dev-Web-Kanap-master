@@ -1,5 +1,5 @@
 
-
+//Variables Globales
 let kanapArray = [];
 let itemslocalStorage = [];
 let cartItems = document.getElementById("cart__items");
