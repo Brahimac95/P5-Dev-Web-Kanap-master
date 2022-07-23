@@ -1,14 +1,12 @@
 
 //===INSERTION DES PRODUITS DANS LA PAGE D'ACCUEIL===//
-
+insertionProduct();
 
 function insertionProduct(){
     // Appel à l'API
     fetch('http://localhost:3000/api/products')
     .then(response => response.json())
-       
     .then(products =>{
-        
         // Je crée une chaîne vide qui contiendra toutes les cards
         let listCardDom = "";
 
@@ -33,6 +31,6 @@ function insertionProduct(){
         alert("Le server ne repond pas")
     })
 }
-insertionProduct();
+
 
 
