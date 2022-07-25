@@ -7,6 +7,7 @@ function insertionProduct(){
     fetch('http://localhost:3000/api/products')
     .then(response => response.json())
     .then(products =>{
+        // console.table(products)
         // Je crée une chaîne vide qui contiendra toutes les cards
         let listCardDom = "";
 

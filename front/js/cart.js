@@ -9,19 +9,22 @@ let totalPrice = 0;
 let totalPrices = 0
 let totalArticles = 0
 
-//Si le panier est vide on afficher un message ou sinon appel des fonctions pour afficher la liste des produits presents
-if(localStorage.getItem("productCart") === null || JSON.parse(localStorage.getItem("productCart")).length < 1){
-    const emptyCart = "Votre panier est vide"
-    document.querySelector("h1").textContent = emptyCart;
-    const totalArticles = "0";
-    const totalPrices = "0";
-    document.getElementById("totalQuantity").textContent = totalArticles;
-    document.getElementById("totalPrice").textContent = totalPrices;
-} else{
-    getProduct();
-    getFetch()
-    totalNumberArticle()
 
+cartStatus()
+//Si le panier est vide on affiche un message comme quoi "le panier est vide" ou sinon appel des fonctions pour afficher la liste des produits présents
+function cartStatus(){
+    if(localStorage.getItem("productCart") === null || JSON.parse(localStorage.getItem("productCart")).length < 1){
+        const emptyCart = "Votre panier est vide"
+        document.querySelector("h1").textContent = emptyCart;
+        const totalArticles = "0";
+        const totalPrices = "0";
+        document.getElementById("totalQuantity").textContent = totalArticles;
+        document.getElementById("totalPrice").textContent = totalPrices;
+    } else{
+        getProduct();
+        getFetch()
+        totalNumberArticle()
+    }
 }
 
 // //Enregistrement du panier dans le localStorage
@@ -29,21 +32,21 @@ function saveProduct(){
     localStorage.setItem("productCart", JSON.stringify(itemslocalStorage))
 }
 
-//Recupération les produits stocké dans le Ls
+//Fonction de récupération de produits stocké dans le Ls
 function getProduct(){
     itemslocalStorage = JSON.parse(localStorage.getItem("productCart"));
 }
 
-//Recupération des données de l'API et afficher les élements du Ls
+//Recupération des données de l'API et afficher les élements du Ls dans le panier
 function getFetch(){
     fetch("http://localhost:3000/api/products")
     .then(response => response.json())
     .then(productData => {
         kanapArray = productData;
-        //Boucle + la méthode find pour faire correspondre les produit grâce leurs id
+        //Boucle + la méthode find pour faire correspondre les produits grâce leurs id
         itemslocalStorage.forEach((itemInLocalStorage) =>{
             const allItems = kanapArray.find((data) => data._id == itemInLocalStorage.id);
-            //Creation et insertion du contenu du Dom en affichant les éléments du Ls
+            //Création et insertion du contenu du Dom en affichant les éléments du Ls
             cartItems.innerHTML += `<article class="cart__item" data-id="${itemInLocalStorage.id}" data-color="${itemInLocalStorage.color}">
             <div class="cart__item__img">
               <img src="${allItems.imageUrl}" alt="${allItems.altTxt}">
@@ -69,7 +72,7 @@ function getFetch(){
           //Calcul du prix total de produit dans le panier
           totalPrice += itemInLocalStorage.quantity * allItems.price
           document.getElementById("totalPrice").textContent = totalPrice ;
-            //Appel des fonctions après chargement des données de l'API
+            //Appel des 2 fonctions après chargement des données de l'API
             changeQuantity()
             deleteArticle()
 
@@ -89,7 +92,7 @@ function totalNumberArticle(){
     getProduct()
     for(let product of itemslocalStorage){
         totalArticle += Number(product.quantity)
-    }
+    }//Puis on insère dans le Dom
     document.getElementById("totalQuantity").textContent = totalArticle;
 }
 
@@ -100,11 +103,12 @@ function changeQuantity(){
     for(let index = 0; index < btnQuantiy.length; index++) {
         let el = btnQuantiy[index];
         el.addEventListener("change",(e) =>{
-            id = el.closest("[data-id]").dataset.id;
+            //closest nous permet ici de cibler l'élément que l'on souhaite modifier grâce à son id et sa couleur
+            id = el.closest("[data-id]").dataset.id;//Avec dataset on accède aux valeur des deux attributs 
             color = el.closest("[data-color]").dataset.color;
-            //Quand le visiteur choisi plus de 100 article dans le input
+            //Quand le visiteur choisi plus de 100 articles dans le input
             if(e.target.value > 100){
-                alert("La quantité ne doit pas depasser 100, veuillez choisir une autre quantité.")
+                alert("La quantité ne doit pas être supérieure à 100, veuillez choisir une autre quantité.")
             }
             //2e boucle pour donner une la nouvelle valeur au Ls puis l'enregister
             for(let i = 0; i < itemslocalStorage.length; i++) {
@@ -146,7 +150,7 @@ let city = document.getElementById("city");
 let email = document.getElementById("email");
 
 
-//Vrarible globale regExp
+//Variable globale regExp( Expressions regulières)
 let regExpName = new RegExp(/^[ a-zA-ZàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸçÇßØøÅåÆæœ'`'\-]+$/);
 let regExpAddress = new RegExp(/^[a-zA-Z0-9\s-',]+$/);
 
@@ -162,8 +166,7 @@ firstName.addEventListener("change", () => {
     } else{
         p.innerHTML="Prenom non valide"
     }   // firstName.style.border = " 1px solid #ed3832"
-        
-   
+         
 });
 lastName.addEventListener("change", () => {
     let p = document.getElementById("lastNameErrorMsg")
@@ -176,8 +179,7 @@ lastName.addEventListener("change", () => {
     } else{
         p.innerHTML ="Nom non valide"
     }   // firstName.style.border = " 1px solid #ed3832"
-        
-   
+         
 });
 address.addEventListener("change", () => {
     let p = document.getElementById("addressErrorMsg")
@@ -190,8 +192,7 @@ address.addEventListener("change", () => {
     } else{
         p.innerHTML ="Adresse non valide"
     }   // firstName.style.border = " 1px solid #ed3832"
-        
-   
+          
 });
 city.addEventListener("change", () => {
     let p = document.getElementById("cityErrorMsg")
@@ -206,7 +207,6 @@ city.addEventListener("change", () => {
     }   // firstName.style.border = " 1px solid #ed3832"
          
 })
-
 
 let regExpEmail =  new RegExp(/^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/);
 email.addEventListener("change",() =>{
@@ -223,6 +223,7 @@ email.addEventListener("change",() =>{
 })
 
 
+//=====REQUETE POST DU FORMULAIRE À L'API====//
 
 let order = document.getElementById("order");
 // Ecoute du clic sur le bouton "Commander" et création de l'objet contact
@@ -247,7 +248,7 @@ order.addEventListener("click", (e) => {
     alert("Un des champs du formulaire n'est pas completé ");
   } else if (localStorage.getItem("productCart") === null || JSON.parse(localStorage.getItem("productCart")).length < 1) {
     alert(
-      "Votre panier est vide! Merci choisir des produits avant de passer commande."
+      "Votre panier est vide! Merci choisir des articles avant de passer commande."
     );
   } else if (
     regExpName.test(firstName.value) == false ||
