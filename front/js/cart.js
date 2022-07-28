@@ -1,16 +1,17 @@
 
 //Variables Globales
-let kanapArray = [];
-let itemslocalStorage = [];
+let kanapArray = []; // Contiendra les données réçu par l'API
+let itemslocalStorage = []; // Contiendra les données du localStorage
 let cartItems = document.getElementById("cart__items");
 let totalArticle = 0;
 let totalPrice = 0;
-//Variable globales des totaux quand le panier est vide
-let totalPrices = 0
-let totalArticles = 0
+
+//Variable globales des totaux lorsque le panier est vide
+let totalPrices = 0; 
+let totalArticles = 0;
 
 
-cartStatus()
+cartStatus();
 //Si le panier est vide on affiche un message comme quoi "le panier est vide" ou sinon appel des fonctions pour afficher la liste des produits présents
 function cartStatus(){
     if(localStorage.getItem("productCart") === null || JSON.parse(localStorage.getItem("productCart")).length < 1){
@@ -22,14 +23,14 @@ function cartStatus(){
         document.getElementById("totalPrice").textContent = totalPrices;
     } else{
         getProduct();
-        getFetch()
-        totalNumberArticle()
+        getFetch();
+        totalNumberArticle();
     }
 }
 
 // //Enregistrement du panier dans le localStorage
 function saveProduct(){
-    localStorage.setItem("productCart", JSON.stringify(itemslocalStorage))
+    localStorage.setItem("productCart", JSON.stringify(itemslocalStorage));
 }
 
 //Fonction de récupération de produits stocké dans le Ls
@@ -99,24 +100,25 @@ function totalNumberArticle(){
 //Ecoute et prise en compte des nouvelles quantité après changement
 let btnQuantiy = document.getElementsByClassName("itemQuantity")
 function changeQuantity(){
-    //1ere boucle sur les inputs pour ecouter des changements en fonction de l'id et le color
+    //1ere boucle sur les inputs pour écouter des changements en fonction de l'id et la color
     for(let index = 0; index < btnQuantiy.length; index++) {
         let el = btnQuantiy[index];
         el.addEventListener("change",(e) =>{
             //closest nous permet ici de cibler l'élément que l'on souhaite modifier grâce à son id et sa couleur
             id = el.closest("[data-id]").dataset.id;//Avec dataset on accède aux valeur des deux attributs 
             color = el.closest("[data-color]").dataset.color;
-            //Quand le visiteur choisi plus de 100 articles dans le input
+            //Quand le visiteur choisi plus de 100 articles lors de la modification de la quantité dans le panier
             if(e.target.value > 100){
                 alert("La quantité ne doit pas être supérieure à 100, veuillez choisir une autre quantité.")
-            }
-            //2e boucle pour donner une la nouvelle valeur au Ls puis l'enregister
-            for(let i = 0; i < itemslocalStorage.length; i++) {
-                if(id === itemslocalStorage[i].id && color === itemslocalStorage[i].color && e.target.value <= 100) {
-                    itemslocalStorage[i].quantity = e.target.value;
-                    saveProduct()//Pour enregistrer le panier
-                    location.reload();
-
+            } else {
+                //2e boucle pour donner une la nouvelle valeur au Ls puis l'enregister
+                for(let i = 0; i < itemslocalStorage.length; i++) {
+                    if(id === itemslocalStorage[i].id && color === itemslocalStorage[i].color && e.target.value <= 100) {
+                        itemslocalStorage[i].quantity = e.target.value;
+                        saveProduct()//On enregistre le panier dans le Ls
+                        document.location.reload();
+    
+                    }
                 }
             }
         });
@@ -131,7 +133,7 @@ function deleteArticle(){
         deleteItem[i].addEventListener("click", (event) => {
             event.preventDefault();
             //.splice permet d'ajouter ou supprimer un élément dans un [], dans notre cas il supprime que l'élément ou le bouton a été actionné 
-            itemslocalStorage.splice([i], 1)
+            itemslocalStorage.splice([i], 1)// supprimer 1 élément à partir de l'index i
             document.location.reload()
             saveProduct()
         })
@@ -160,12 +162,12 @@ firstName.addEventListener("change", () => {
 
     if(regExpName.test(firstName.value)){
         p.textContent = "Prenom validé"
-        p.style.color ="green"
+        // p.style.color ="green"
         // firstName.style.border = "1px solid #0be45b"
 
     } else{
         p.innerHTML="Prenom non valide"
-    }   // firstName.style.border = " 1px solid #ed3832"
+    }   // firstName.style.color = " #ed3832"
          
 });
 lastName.addEventListener("change", () => {
@@ -173,7 +175,7 @@ lastName.addEventListener("change", () => {
 
     if(regExpName.test(lastName.value)){
         p.textContent = " Nom validé "
-        p.style.color ="green"
+        // p.style.color ="white"
         // firstName.style.border = "1px solid #0be45b"
 
     } else{
@@ -186,7 +188,7 @@ address.addEventListener("change", () => {
 
     if(regExpAddress.test(address.value)){
         p.textContent = "Adresse validé"
-        p.style.color ="green"
+        // p.style.color ="green"
         // firstName.style.border = "1px solid #0be45b"
 
     } else{
@@ -199,7 +201,7 @@ city.addEventListener("change", () => {
 
     if(regExpName.test(city.value)){
         p.textContent = "Ville validé"
-        p.style.color ="green"
+        // p.style.color ="green"
         // firstName.style.border = "1px solid #0be45b"
 
     } else{
@@ -259,7 +261,7 @@ order.addEventListener("click", (e) => {
   ) {
     alert("Un des champs du formulaire n'est pas valide !");
   } else {
-        //Tableau qui contiendra les donnée du Ls et véfication grâce à l'id
+        //Tableau qui contiendra les donnée du Ls par une vérification grâce à l'id
         let products = [];
         itemslocalStorage.forEach((order) => {
         products.push(order.id);

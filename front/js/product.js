@@ -2,8 +2,7 @@
 let urlParams= new URLSearchParams(window.location.search);
 // console.table(window.location)
 let productId = urlParams.get("id");
-// console.log(productId);
-let product = "";//Article
+let product = "";
 
 //Variable globales des éléments du DOM
 let imgProduct = document.querySelector(".item__img");
@@ -20,7 +19,7 @@ let quantityProduct = document.getElementById("quantity");
     .then(response => response.json())
     
     .then ((products) => {
-        // console.log(product)
+        // console.table(products)
         loadProduct(products);
        
     })

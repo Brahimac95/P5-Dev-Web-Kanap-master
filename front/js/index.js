@@ -7,7 +7,7 @@ function insertionProduct(){
     fetch('http://localhost:3000/api/products')
     .then(response => response.json())
     .then(products =>{
-        // console.table(products)
+        console.table(products)
         // Je crée une chaîne vide qui contiendra toutes les cards
         let listCardDom = "";
 
@@ -25,10 +25,10 @@ function insertionProduct(){
         document.querySelector("#items").innerHTML = listCardDom;
     }) 
     .catch((error) =>{
-        alert("Le produit n'est pas accessible")
+        alert("Le serveur ne repond pas")
     })
-        
+    
     .catch((error) =>{
-        alert("Le server ne repond pas")
+        alert("Le produit n'est pas accessible")
     })
 }
