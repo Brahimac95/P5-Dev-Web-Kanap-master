@@ -59,7 +59,8 @@ function clickBtn(){
             }
             addToCart(optionProducts);         
             window.confirm(`${quantityProduct.value} ${document.getElementById("title").textContent} ${colorProduct.value} a été ajouté au panier` );
-                //  window.location.href = "index.html"
+            // Redirection vers la page panier
+            window.location.href = "cart.html"
 
         } else if (quantityProduct.value > 100) {
             alert("Desolé vous ne pouvez pas commander plus de 100 articles par commande");
