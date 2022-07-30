@@ -158,68 +158,58 @@ let regExpAddress = new RegExp(/^[a-zA-Z0-9\s-',]+$/);
 
 //Ecoute le changement et la validation des champs du formulaire
 firstName.addEventListener("change", () => {
-    let p = document.getElementById("firstNameErrorMsg")
+    let firstNameErrorMsg = document.getElementById("firstNameErrorMsg")
 
     if(regExpName.test(firstName.value)){
-        p.textContent = "Prenom validé"
-        // p.style.color ="green"
-        // firstName.style.border = "1px solid #0be45b"
+        firstNameErrorMsg.textContent = "Prénom validé"
 
     } else{
-        p.innerHTML="Prenom non valide"
-    }   // firstName.style.color = " #ed3832"
+        firstNameErrorMsg.innerHTML="Prénom non valide"
+    }   
          
 });
 lastName.addEventListener("change", () => {
-    let p = document.getElementById("lastNameErrorMsg")
+    let lastNameErrorMsg = document.getElementById("lastNameErrorMsg")
 
     if(regExpName.test(lastName.value)){
-        p.textContent = " Nom validé "
-        // p.style.color ="white"
-        // firstName.style.border = "1px solid #0be45b"
+        lastNameErrorMsg.textContent = " Nom validé "
 
     } else{
-        p.innerHTML ="Nom non valide"
-    }   // firstName.style.border = " 1px solid #ed3832"
+        lastNameErrorMsg.innerHTML ="Nom non valide"
+    }   
          
 });
 address.addEventListener("change", () => {
-    let p = document.getElementById("addressErrorMsg")
+    let addressErrorMsg = document.getElementById("addressErrorMsg")
 
     if(regExpAddress.test(address.value)){
-        p.textContent = "Adresse validé"
-        // p.style.color ="green"
-        // firstName.style.border = "1px solid #0be45b"
-
+        addressErrorMsg.textContent = "Adresse validé"
+       
     } else{
-        p.innerHTML ="Adresse non valide"
-    }   // firstName.style.border = " 1px solid #ed3832"
-          
+        addressErrorMsg.innerHTML ="Adresse non valide"
+    }   
+
 });
 city.addEventListener("change", () => {
-    let p = document.getElementById("cityErrorMsg")
+    let cityErrorMsg = document.getElementById("cityErrorMsg")
 
     if(regExpName.test(city.value)){
-        p.textContent = "Ville validé"
-        // p.style.color ="green"
-        // firstName.style.border = "1px solid #0be45b"
+        cityErrorMsg.textContent = "Ville validé"
 
     } else{
-        p.innerHTML ="Ville non valide"
-    }   // firstName.style.border = " 1px solid #ed3832"
-         
+        cityErrorMsg.innerHTML ="Ville non valide"
+    }         
 })
 
 let regExpEmail =  new RegExp(/^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/);
 email.addEventListener("change",() =>{
-    let p = document.getElementById("emailErrorMsg")
+    let emailErrorMsg = document.getElementById("emailErrorMsg")
 
     if(regExpEmail.test(email.value)){
-        p.textContent = "Email Valide";
-        p.style.color ="green"
+        emailErrorMsg.textContent = "Email Valide";
 
     } else {
-        p.innerHTML = "Email non valide";
+        emailErrorMsg.innerHTML = "Email non valide";
     }
     
 })
