@@ -1,8 +1,8 @@
-//Recuperation des id dans l'Url 
-let urlParams= new URLSearchParams(window.location.search);
+//RECUPERATION DE L'ID ET PARAMETRE D'UN PRODUIT DANS L'URL
+
+let urlParams= new URLSearchParams(document.location.search); // paramètres du produit
 // console.table(window.location)
 let productId = urlParams.get("id");
-let product = "";
 
 //Variable globales des éléments du DOM
 let imgProduct = document.querySelector(".item__img");
@@ -13,6 +13,7 @@ let colorProduct = document.getElementById("colors");
 let price = document.getElementById("price");
 let quantityProduct = document.getElementById("quantity");
 
+let product = "";
 
  // Appel à API pour récuperer les données
     fetch(`http://localhost:3000/api/products/${productId}`)
@@ -42,10 +43,10 @@ function loadProduct (product){
 
 clickBtn();
 
-//Fonction de gestion de l'ajoute au panier au click du bouton
+//Fonction de gestion de l'ajout au panier au click du bouton
 function clickBtn(){
     let btnAddToCart = document.getElementById("addToCart");
-    
+    //Ecoute du bouton "Ajouter au panier"
     btnAddToCart.addEventListener("click", (e) =>{
         e.preventDefault() 
         if(colorProduct.value === "" || quantity.value == null || quantity.value <= 0 ) {
@@ -57,8 +58,9 @@ function clickBtn(){
                 color: colorProduct.value,
                 quantity: quantity.value,                
             }
+            //Fonction présente dans le fichier basket.js
             addToCart(optionProducts);         
-            window.confirm(`${quantityProduct.value} ${document.getElementById("title").textContent} ${colorProduct.value} a été ajouté au panier` );
+            window.confirm(`${quantityProduct.value} ${document.getElementById("title").textContent} ${colorProduct.value} a été ajouté au panier`);
             // Redirection vers la page panier
             window.location.href = "cart.html"
 

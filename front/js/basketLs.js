@@ -1,7 +1,7 @@
 //=========================BASKET LOCALSTORAGE==========================//
 
 
-// //Fonction de sauvegarde du panier dans le localStorage en sérialisant les données avec JSON.stringify
+// //Fonction de sauvegarde du panier dans le localStorage en sérialisant les données avec JSON.stringify(transformer un objet ou un tableau en string)
 function saveProducts(products){
     localStorage.setItem("productCart", JSON.stringify(products))
 }
@@ -20,10 +20,11 @@ function getProducts(){
 
 //Ajouter un produit dans le panier ou augmenter sa quantité s'il est déjà present avec la même couleur dans le Ls
 function addToCart(product){
+    // On recupère les éléments du Ls
     let products = getProducts();
       //find va permettre de chercher un élément dans un tableau verifie si cet élement existe déjà , et je l'utilise ici pour ne pas créer de doublon lors d'ajout des produit dans le panier
     let foundProduct = products.find(p => p.id == product.id && p.color == product.color);
-    if(foundProduct != null){
+    if(foundProduct != undefined){
         let newQuantity = Number(parseInt(foundProduct.quantity) + parseInt(product.quantity));
         foundProduct.quantity = newQuantity;
         
