@@ -3,12 +3,12 @@
 let kanapArray = []; // Contiendra les données réçu par l'API
 let itemslocalStorage = []; // Contiendra les données du localStorage
 let cartItems = document.getElementById("cart__items");
-let totalArticle = 0;
-let totalPrice = 0;
+let totalArticles = 0;
+let totalPrices = 0;
 
 //Variable globales des totaux lorsque le panier est vide
-let totalPrices = 0; 
-let totalArticles = 0;
+let totalArticle = 0;
+let totalPrice = 0; 
 
 
 cartStatus();
@@ -17,10 +17,10 @@ function cartStatus(){
     if(localStorage.getItem("productCart") === null || JSON.parse(localStorage.getItem("productCart")).length < 1){
         const emptyCart = "Votre panier est vide"
         document.querySelector("h1").textContent = emptyCart;
-        const totalArticles = "0";
-        const totalPrices = "0";
-        document.getElementById("totalQuantity").textContent = totalArticles;
-        document.getElementById("totalPrice").textContent = totalPrices;
+        const totalArticle = "0";
+        const totalPrice = "0";
+        document.getElementById("totalQuantity").textContent = totalArticle;
+        document.getElementById("totalPrice").textContent = totalPrice;
     } else{
         getProduct();
         getFetch();
@@ -44,8 +44,8 @@ function getFetch(){
     .then(response => response.json())
     .then(productData => {
         kanapArray = productData;
-        //Boucle + la méthode find pour faire correspondre les produits grâce leurs id
-        itemslocalStorage.forEach((itemInLocalStorage) =>{
+        //Méthode forEach + la méthode find pour faire correspondre les produits grâce leurs id
+        itemslocalStorage.forEach((itemInLocalStorage) => {
             const allItems = kanapArray.find((data) => data._id == itemInLocalStorage.id);
             //Création et insertion du contenu du Dom en affichant les éléments du Ls
             cartItems.innerHTML += `<article class="cart__item" data-id="${itemInLocalStorage.id}" data-color="${itemInLocalStorage.color}">
@@ -71,8 +71,8 @@ function getFetch(){
           </article>`;
 
           //Calcul du prix total de produit dans le panier
-          totalPrice += itemInLocalStorage.quantity * allItems.price
-          document.getElementById("totalPrice").textContent = totalPrice ;
+          totalPrices += itemInLocalStorage.quantity * allItems.price
+          document.getElementById("totalPrice").textContent = totalPrices ;
             //Appel des 2 fonctions après chargement des données de l'API
             changeQuantity()
             deleteArticle()
@@ -92,24 +92,28 @@ function getFetch(){
 function totalNumberArticle(){
     getProduct()
     for(let product of itemslocalStorage){
-        totalArticle += Number(product.quantity)
+        totalArticles += Number(product.quantity)// Number pour ne pas avoir de concatenation 
     }//Puis on insère dans le Dom
-    document.getElementById("totalQuantity").textContent = totalArticle;
+    document.getElementById("totalQuantity").textContent = totalArticles;
 }
 
+
+let itemQuantiy = document.getElementsByClassName("itemQuantity")
+
 //Ecoute et prise en compte des nouvelles quantité après changement
-let btnQuantiy = document.getElementsByClassName("itemQuantity")
 function changeQuantity(){
     //1ere boucle sur les inputs pour écouter des changements en fonction de l'id et la color
-    for(let index = 0; index < btnQuantiy.length; index++) {
-        let el = btnQuantiy[index];
-        el.addEventListener("change",(e) =>{
-            //closest nous permet ici de cibler l'élément que l'on souhaite modifier grâce à son id et sa couleur
-            id = el.closest("[data-id]").dataset.id;//Avec dataset on accède aux valeur des deux attributs 
-            color = el.closest("[data-color]").dataset.color;
-            //Quand le visiteur choisi plus de 100 articles lors de la modification de la quantité dans le panier
-            if(e.target.value > 100){
-                alert("La quantité ne doit pas être supérieure à 100, veuillez choisir une autre quantité.")
+    for(let index = 0; index < itemQuantiy.length; index++) {
+        let element = itemQuantiy[index];
+        element.addEventListener("change",(e) =>{
+            //element.closest nous permet ici de cibler que l'élément que l'on souhaite modifier grâce à son id et sa couleur
+            id = element.closest("[data-id]").dataset.id;//Avec dataset on accède aux valeur des deux attributs 
+            color = element.closest("[data-color]").dataset.color;
+            // Quand le visiteur choisi une quantité négative ou plus de 100 articles lors de la modification de la quantité dans le panier
+             if(e.target.value < 0){
+                alert("La quantité du produit ne peut pas être négative, veuillez choisir une autre quantié. ")               
+            } else if(e.target.value > 100){
+                alert("La quantité ne doit pas être supérieure à 100, veuillez choisir une autre quantité. ")
             } else {
                 //2e boucle pour donner une la nouvelle valeur au Ls puis l'enregister
                 for(let i = 0; i < itemslocalStorage.length; i++) {
@@ -117,7 +121,6 @@ function changeQuantity(){
                         itemslocalStorage[i].quantity = e.target.value;
                         saveProduct()//On enregistre le panier dans le Ls
                         document.location.reload();
-    
                     }
                 }
             }
@@ -272,7 +275,7 @@ order.addEventListener("click", (e) => {
         .then((data) => {
             //j'ajoute l'id de commande dans l'url de la page de confirmation
             window.location.href = "./confirmation.html?orderId=" + data.orderId;
-            // Suppression des élément du LocalStorage
+            // on vide le LocalStorage
             window.localStorage.clear();
         })
         .catch((error) => {
